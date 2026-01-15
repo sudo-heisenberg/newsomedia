@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assam Newspapers Research</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .note h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .note ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+        
+        .note ul li {
+            margin: 5px 0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .sources {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 5px;
+        }
+        
+        .sources h3 {
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+        
+        .sources ul {
+            margin-left: 20px;
+            color: #1565c0;
+        }
+        
+        .sources ul li {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Assam Newspaper Publishers</h1>
+            <p>Comprehensive Research & Market Analysis</p>
+        </div>
+        
+        <div class="content">
+            <div class="note">
+                <h3>⚠️ Important Data Availability Note</h3>
+                <ul>
+                    <li><strong>Limited Financial Data:</strong> Most newspapers are privately held companies and do not publicly disclose revenue, profit margins, or detailed financial information</li>
+                    <li><strong>Recycling Information:</strong> No specific data found on newspaper-owned recycling plants in Assam. Most newspapers likely outsource paper recycling</li>
+                    <li><strong>Employee Data:</strong> Exact employee counts are not publicly disclosed by most publishers</li>
+                    <li><strong>Market Share:</strong> Estimated based on circulation and readership data where available</li>
+                    <li><strong>Data compiled from:</strong> Industry reports, newspaper websites, advertising platforms, and media databases (January 2026)</li>
+                </ul>
+            </div>
+            
+            <button class="download-btn" onclick="downloadExcel()">📥 Download Excel Report</button>
+            
+            <div class="table-container">
+                <table id="newspaperTable">
+                    <thead>
+                        <tr>
+                            <th>Publisher Name</th>
+                            <th>Language</th>
+                            <th>Founded</th>
+                            <th>Editions/Locations</th>
+                            <th>Circulation (Daily)</th>
+                            <th>Readership</th>
+                            <th>Market Share</th>
+                            <th>Revenue (Est.)</th>
+                            <th>Employees (Est.)</th>
+                            <th>E-Paper Availability</th>
+                            <th>E-Paper Charges</th>
+                            <th>Parent Company</th>
+                            <th>Recycling Info</th>
+                            <th>Loyalty Program</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+            
+            <div class="sources">
+                <h3>📚 Sources of Information</h3>
+                <ul>
+                    <li><strong>Statista:</strong> Indian Readership Survey (IRS) data for Assamese publications (Dec 2019-March 2020)</li>
+                    <li><strong>Campaign India:</strong> Leading Assamese publications by readership</li>
+                    <li><strong>Indian PR Distribution:</strong> Top 10 Assamese newspapers circulation data</li>
+                    <li><strong>Ad Agency Noida:</strong> Top newspapers in Assam by circulation and readership</li>
+                    <li><strong>The Assam Tribune:</strong> Company website and subscription information</li>
+                    <li><strong>News Laundry (June 2025):</strong> Financial analysis of The Assam Tribune Pvt Ltd</li>
+                    <li><strong>RocketReach:</strong> Company profile data for The Assam Tribune</li>
+                    <li><strong>Wikipedia:</strong> Historical and background information on newspapers</li>
+                    <li><strong>Newspaper official websites:</strong> Asomiya Pratidin, Amar Asom, Niyomiya Barta, Dainik Agradoot e-paper platforms</li>
+                    <li><strong>ReleaseMyAd:</strong> Circulation data and advertising information</li>
+                    <li><strong>Pratidin Time:</strong> About page for Pratidin Media Network information</li>
+                    <li><strong>Assam Yellow Pages:</strong> Publisher contact and operational details</li>
+                    <li><strong>W3 Newspapers:</strong> Comprehensive Assamese newspaper directory</li>
+                    <li><strong>Ecotech Papers:</strong> Recycling plant capacity information in Assam</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const newspaperData = [
+            {
+                name: "Asomiya Pratidin",
+                language: "Assamese",
+                founded: "1995",
+                editions: "Guwahati, Bongaigaon, Dibrugarh, North Lakhimpur",
+                circulation: "150,000+",
+                readership: "3.99 lakhs (399,000)",
+                marketShare: "#1 - Highest in Assam",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "₹1,200/year (Readers Pack)",
+                parent: "Sadin-Pratidin Group (Est. 1988 by Jayanta Baruah)",
+                recycling: "No dedicated plant info. Standard newspaper recycling practices likely",
+                loyalty: "E-paper subscription package available"
+            },
+            {
+                name: "Niyomiya Barta",
+                language: "Assamese",
+                founded: "March 4, 2011",
+                editions: "Guwahati, Dibrugarh, Biswanath Chariali, Goalpara",
+                circulation: "62,860 (Guwahati edition)",
+                readership: "1 million+ (2nd highest)",
+                marketShare: "#2 in Assam",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "Pride East Entertainment Pvt Ltd / Arkashish Publications",
+                recycling: "No dedicated plant info",
+                loyalty: "Free weekly magazine 'Bahi' with subscription"
+            },
+            {
+                name: "Amar Asom",
+                language: "Assamese",
+                founded: "April 21, 1997",
+                editions: "Guwahati, Jorhat, North Lakhimpur",
+                circulation: "Not specified",
+                readership: "High (3rd ranked)",
+                marketShare: "#3 in Assam",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "G.L. Publications Ltd",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "Dainik Agradoot",
+                language: "Assamese",
+                founded: "One of the oldest",
+                editions: "Guwahati, Jorhat, Tezpur",
+                circulation: "High circulation (2nd in some reports)",
+                readership: "Significant across Assam",
+                marketShare: "Top 3-4 in circulation",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "Agradoot Publishers Pvt Ltd (HQ: Dispur)",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "The Assam Tribune",
+                language: "English",
+                founded: "August 4, 1939",
+                editions: "Guwahati, Dibrugarh",
+                circulation: "52,000 (2023)",
+                readership: "3 million+ (highest English daily in NE)",
+                marketShare: "#1 English newspaper in NE India",
+                revenue: "₹56.38 crore (FY 2023-24)",
+                employees: "380+ across 4 outlets",
+                epaper: "Yes - Available",
+                epaperCharges: "Various plans: Save 30.24% to 48.55%",
+                parent: "The Assam Tribune Pvt Ltd (Director: Divija Rajkhowa)",
+                recycling: "No dedicated plant info",
+                loyalty: "Subscription discounts available"
+            },
+            {
+                name: "Dainik Asom",
+                language: "Assamese",
+                founded: "Part of Assam Tribune Group",
+                editions: "Multiple",
+                circulation: "16,000 (2023 DIPR data)",
+                readership: "Not specified",
+                marketShare: "Smaller circulation",
+                revenue: "Part of Assam Tribune Group (₹56.38 cr total)",
+                employees: "Part of 380+ Assam Tribune Group",
+                epaper: "Yes - Available",
+                epaperCharges: "Part of Tribune package",
+                parent: "The Assam Tribune Group",
+                recycling: "No dedicated plant info",
+                loyalty: "Part of Tribune subscription"
+            },
+            {
+                name: "Dainik Janambhumi",
+                language: "Assamese",
+                founded: "Historical publication",
+                editions: "Multiple locations including Jorhat, Dibrugarh",
+                circulation: "Good circulation",
+                readership: "High in upper Assam",
+                marketShare: "Notable presence in upper Assam",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "Not specified",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "Asomiya Khabar",
+                language: "Assamese",
+                founded: "1965",
+                editions: "Guwahati, Jorhat",
+                circulation: "Good circulation",
+                readership: "Significant",
+                marketShare: "Notable",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "Brahmaputra Valley Printing & Publishing House",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "Janasadharan",
+                language: "Assamese",
+                founded: "2003",
+                editions: "Guwahati",
+                circulation: "Not specified",
+                readership: "Focus on common people issues",
+                marketShare: "Smaller circulation",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "Janasadharan Group",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "The North East Times",
+                language: "English",
+                founded: "Not specified",
+                editions: "Multiple NE states",
+                circulation: "Good circulation",
+                readership: "Regional focus",
+                marketShare: "Notable English daily",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Not specified",
+                parent: "G.L. Publications Ltd",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            },
+            {
+                name: "Purvanchal Prahari",
+                language: "Hindi",
+                founded: "First Hindi newspaper of NE",
+                editions: "Assam and regional",
+                circulation: "Not specified",
+                readership: "Hindi-speaking community",
+                marketShare: "Leading Hindi daily in NE",
+                revenue: "Not publicly disclosed",
+                employees: "Not publicly disclosed",
+                epaper: "Yes - Available",
+                epaperCharges: "Free access available",
+                parent: "G.L. Publications Ltd",
+                recycling: "No dedicated plant info",
+                loyalty: "None specified"
+            }
+        ];
+
+        function populateTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            newspaperData.forEach(paper => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${paper.name}</strong></td>
+                    <td>${paper.language}</td>
+                    <td>${paper.founded}</td>
+                    <td>${paper.editions}</td>
+                    <td>${paper.circulation}</td>
+                    <td>${paper.readership}</td>
+                    <td>${paper.marketShare}</td>
+                    <td>${paper.revenue}</td>
+                    <td>${paper.employees}</td>
+                    <td>${paper.epaper}</td>
+                    <td>${paper.epaperCharges}</td>
+                    <td>${paper.parent}</td>
+                    <td>${paper.recycling}</td>
+                    <td>${paper.loyalty}</td>
+                `;
+            });
+        }
+
+        function downloadExcel() {
+            const ws_data = [
+                [
+                    "Publisher Name",
+                    "Language",
+                    "Founded",
+                    "Editions/Locations",
+                    "Circulation (Daily)",
+                    "Readership",
+                    "Market Share",
+                    "Revenue (Estimated)",
+                    "Employees (Estimated)",
+                    "E-Paper Availability",
+                    "E-Paper Charges",
+                    "Parent Company",
+                    "Recycling Plant Info",
+                    "Loyalty Program",
+                    "Profit Margin",
+                    "Recycling Cost"
+                ]
+            ];
+
+            newspaperData.forEach(paper => {
+                ws_data.push([
+                    paper.name,
+                    paper.language,
+                    paper.founded,
+                    paper.editions,
+                    paper.circulation,
+                    paper.readership,
+                    paper.marketShare,
+                    paper.revenue,
+                    paper.employees,
+                    paper.epaper,
+                    paper.epaperCharges,
+                    paper.parent,
+                    paper.recycling,
+                    paper.loyalty,
+                    "Not publicly disclosed",
+                    "Not publicly disclosed"
+                ]);
+            });
+
+            ws_data.push([]);
+            ws_data.push(["DATA SOURCES AND NOTES"]);
+            ws_data.push([]);
+            ws_data.push(["Source", "Information Provided"]);
+            ws_data.push(["Statista", "IRS readership data (Dec 2019-Mar 2020) - Asomiya Pratidin: 2M+ readers, Niyomiya Barta: 1M+ readers"]);
+            ws_data.push(["News Laundry (June 2025)", "The Assam Tribune: Revenue ₹56.38 cr (FY23-24), Profit ₹55.38 lakh, 380+ employees"]);
+            ws_data.push(["RocketReach", "The Assam Tribune annual revenue: $5.7 million (2025 estimate)"]);
+            ws_data.push(["ReleaseMyAd", "Niyomiya Barta circulation: 62,860 copies daily (Guwahati edition)"]);
+            ws_data.push(["Wikipedia & Official Sites", "Circulation: Asomiya Pratidin 150,000+, The Assam Tribune 52,000, Dainik Asom 16,000"]);
+            ws_data.push(["Ecotech Papers", "Paper recycling plant in Kamalpur, Guwahati with 84,000 TPA capacity (not newspaper-owned)"]);
+            ws_data.push([]);
+            ws_data.push(["IMPORTANT NOTES:"]);
+            ws_data.push(["1. Most newspapers in Assam are privately held and do not publicly disclose financial data"]);
+            ws_data.push(["2. No dedicated newspaper-owned recycling plants found in Assam - likely outsourced"]);
+            ws_data.push(["3. Profit margins and recycling costs are proprietary business information not publicly available"]);
+            ws_data.push(["4. Employee counts are estimates based on available data from The Assam Tribune Group"]);
+            ws_data.push(["5. Market share estimated based on circulation and readership survey data"]);
+            ws_data.push(["6. E-paper availability confirmed through newspaper websites as of January 2026"]);
+            ws_data.push(["7. Revenue data only available for The Assam Tribune through public financial analysis"]);
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            
+            const colWidths = [
+                {wch: 25}, {wch: 12}, {wch: 12}, {wch: 40}, {wch: 18}, 
+                {wch: 20}, {wch: 25}, {wch: 25}, {wch: 20}, {wch: 18},
+                {wch: 25}, {wch: 45}, {wch: 35}, {wch: 35}, {wch: 25}, {wch: 25}
+            ];
+            ws['!cols'] = colWidths;
+
+            XLSX.utils.book_append_sheet(wb, ws, "Assam Newspapers");
+            
+            XLSX.writeFile(wb, "Assam_Newspaper_Publishers_Research.xlsx");
+        }
+
+        populateTable();
+    </script>
+</body>
+</html>
